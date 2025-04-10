@@ -31,9 +31,37 @@ A production-grade reference architecture for mission-critical order processing,
 | **📊 Operational Excellence** | CloudWatch embedded metrics    | Detect shipping delays in real-time |
 
 
-```mermaid
-flowchart TD
-  A[📦 Order] --> B{⚡ EventBridge}
-  B --> C[📊 Inventory]
-  B --> D[💳 Payment]
-  C & D --> E[🚚 Shipping]
+# ✅ Why I Use Sequential Event Processing (SAGA Choreography)
+
+In my event-driven order processing system, I have chosen **sequential event processing** over parallel processing. Below are the key reasons supporting this architectural decision.
+
+## 🎯 Business Logic Clarity
+
+- Sequential flow mirrors real-world order processing: first reserve stock, then charge payment, then ship.
+- Keeps each step dependent on the success of the previous step, making business rules easy to follow and audit.
+---
+## 🔄 Easier Compensation (Rollback)
+
+- Failures are caught early: if inventory reservation fails, there's no need to initiate payment or shipping.
+- Compensating actions like `RestockInventory` or `RefundPayment` are minimized or avoided altogether.
+
+## 🧠 Simpler State Management
+
+- Each service only needs to track its immediate state and respond to the previous service’s event.
+- Avoids complex race conditions or the need to reconcile partial failures from parallel tasks.
+
+## 🔒 Data Integrity
+
+- Ensures strict ordering of operations to avoid invalid states (e.g., charging a customer when stock is unavailable).
+- Inventory and payment updates can use DynamoDB conditional updates to protect against double processing.
+
+## 🛠️ Debugging and Observability
+
+- Easier to trace failures and reason about flow in CloudWatch Logs or X-Ray.
+- Events form a clear, linear timeline of what happened in which order.
+
+## 📉 Lower Risk for Mission-Critical Workloads
+
+- Especially important in financial or regulated domains where accuracy and control trump speed.
+- Predictable behavior under retries, timeouts, or partial outages.
+
