@@ -25,6 +25,11 @@ module "api_gateway" {
   throttling_rate_limit  = 50
 }
 
+# SQS
+module "sqs" {
+  source = "../modules/sqs"
+}
+
 # EventBridge
 module "eventbridge" {
   source = "../modules/eventbridge"
@@ -39,7 +44,7 @@ module "eventbridge" {
         "source" = ["order-service"]
       })
       // TODO add lambda ARN of SQS -> inventory service
-      lambda_arn = ""
+      target_arn = module.sqs.inventory_sqs_arn
     },
 
     "inventory-reserved-to-payment" = {
@@ -48,7 +53,7 @@ module "eventbridge" {
         "source" = ["inventory-service"]
       })
       // TODO add lambda ARN of SQS -> payment service
-      lambda_arn = ""
+      target_arn = module.sqs.payment_sqs_arn
     },
     "inventory-unavailable-to-order" = {
       pattern = jsonencode({
@@ -56,7 +61,7 @@ module "eventbridge" {
         "source" = ["inventory-service"]
       })
       // TODO add lambda ARN of order service to handle order status
-      lambda_arn = ""
+      target_arn = ""
     },
 
     "payment-processed-to-order" = {
@@ -65,7 +70,7 @@ module "eventbridge" {
         "source" = ["payment-service"]
       })
       // TODO add lambda ARN of order service to handle order status
-      lambda_arn = ""
+      target_arn = ""
     },
     "payment-failed-to-order" = {
       pattern = jsonencode({
@@ -73,7 +78,7 @@ module "eventbridge" {
         "source" = ["payment-service"]
       })
       // TODO add lambda ARN of order service to handle order status
-      lambda_arn = ""
+      target_arn = ""
     },
     "payment-failed-to-inventory" = {
       pattern = jsonencode({
@@ -81,7 +86,7 @@ module "eventbridge" {
         "source" = ["payment-service"]
       })
       // TODO add lambda ARN of inventory service to handle inventory rollback
-      lambda_arn = ""
+      target_arn = ""
     },
 
     "order-confirmed" = {
@@ -90,7 +95,7 @@ module "eventbridge" {
         "source" = ["order-service"]
       })
       // TODO add lambda ARN of shipping service to handle order shipping
-      lambda_arn = ""
+      target_arn = ""
     },
   }
 }

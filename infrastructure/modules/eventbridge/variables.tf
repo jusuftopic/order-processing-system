@@ -4,9 +4,9 @@ variable "bus_name" {
 }
 
 variable "rules" {
-  description = "Map of event rules to Lambda ARNs"
+  description = "Map of event rules to target ARNs"
   type = map(object({
     pattern  = string
-    lambda_arn = string
+    target_arn = string
   }))
 }
