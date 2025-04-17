@@ -1,3 +1,9 @@
+# DynamoDB
+module "dynamoDB" {
+  source = "../modules/dynamodb"
+  env    = var.env
+}
+
 # Cognito
 module "cognito" {
   source = "../modules/cognito"
@@ -86,6 +92,5 @@ module "eventbridge" {
       // TODO add lambda ARN of shipping service to handle order shipping
       lambda_arn = ""
     },
-
   }
 }
