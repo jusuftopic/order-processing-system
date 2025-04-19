@@ -28,6 +28,11 @@ module "api_gateway" {
 # SQS
 module "sqs" {
   source = "../modules/sqs"
+  bus_arn = module.eventbridge.bus_arn
+  // TODO add lambda arns
+  inventory_lambda_arn =
+  payment_lambda_arn =
+  depends_on = [module.eventbridge]
 }
 
 # EventBridge
