@@ -101,6 +101,6 @@ module "eventbridge" {
       })
       // TODO add lambda ARN of shipping service to handle order shipping
       target_arn = ""
-    },
+    }
   }
 }
