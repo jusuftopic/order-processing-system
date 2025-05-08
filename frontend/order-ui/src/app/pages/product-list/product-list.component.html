@@ -1,0 +1,17 @@
+<mat-toolbar color="primary">
+  <span>Product Store</span>
+</mat-toolbar>
+
+<div class="product-container">
+  <mat-card class="product-card"
+  *ngFor="let product of products"
+  (click)="openProduct(product)">
+  <mat-card-header>
+    <mat-card-title>{{product.name}}</mat-card-title>
+    <mat-card-subtitle> {{product.price}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p>Click to view details</p>
+  </mat-card-content>
+  </mat-card>
+</div>

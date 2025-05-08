@@ -1,4 +1,3 @@
-import datetime
 import json
 import uuid
 from events import publish_order_created_event
